@@ -6,8 +6,8 @@ import { Form } from "./form";
 import { Button } from "./ui/button";
 import { useRef } from "react";
 import nookies from 'nookies'
-
-
+import { useRouter } from "next/navigation";
+import { ButtonLoading } from "@/app/dashboard/team-members/components/ButtonLoading";
 
 const userLoginSchema = z.object({
   email: z.string().min(1, { message: "Username required" }),
@@ -22,6 +22,7 @@ interface FormData {
 }
 
 export function FormContainer() {
+  const router = useRouter()
   const formContainerRef = useRef(null);
   const userLoginForm = useForm<UserLoginData>({
     resolver: zodResolver(userLoginSchema),
@@ -63,6 +64,9 @@ export function FormContainer() {
     } catch (error) {
       console.log(error)
     }
+    finally {
+      router.push('/dashboard/team-members')
+    }
     
 
     
@@ -90,9 +94,9 @@ export function FormContainer() {
             <Form.InputForm {...register("password")} />
           </Form.Field>
 
-          <Button type="submit" variant={"login"} className="h-[80px]" disabled={isSubmitting}>
-            Login to Keirus admin{" "}
-          </Button>
+          {isSubmitting ? <ButtonLoading /> : <Button type="submit" variant={"login"} className="h-[63px]" disabled={isSubmitting}>
+          Login to Keirus admin{" "}
+          </Button> }
 
           <div className="w-full flex justify-center">
             <span className="text-base text-[#1903D1] font-medium underline">
