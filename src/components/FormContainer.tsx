@@ -5,20 +5,19 @@ import { z } from "zod";
 import { Form } from "./form";
 import { Button } from "./ui/button";
 import { useRef } from "react";
-import { signIn } from "@/api-types/sign-in";
 import nookies from 'nookies'
-import { jwtDecode } from "jwt-decode";
+
 
 
 const userLoginSchema = z.object({
-  username: z.string().min(1, { message: "Username required" }),
+  email: z.string().min(1, { message: "Username required" }),
   password: z.string().min(1, { message: "Password required" }),
 });
 
 type UserLoginData = z.infer<typeof userLoginSchema>;
 
 interface FormData {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -30,29 +29,36 @@ export function FormContainer() {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
-    watch,
+    formState: { isSubmitting }
   } = userLoginForm;
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    console.log(JSON.stringify(data))
 
     try {
+      const response = await fetch('http://localhost:3000/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
       
-      const response = signIn({email: data.username, password: data.password}).then(response => {
-        const token = response.access_token;
+
+      if (!response.ok) {
+        throw new Error('Login falhou');
+      }
+
+      const responseData = await response.json()
+
+
+      const authToken = responseData.access_token
         
-        nookies.set(null,'Auth', token, {
+        nookies.set(null,'Auth', authToken, {
           maxAge: 60 * 60 * 24 * 2,
           path: '/'
         })
       
-        
-        const decodedToken = jwtDecode(token)
-
-        console.log(decodedToken);
-
-  
-      })
       
     } catch (error) {
       console.log(error)
@@ -70,8 +76,8 @@ export function FormContainer() {
           className="flex flex-col gap-6"
         >
           <Form.Field ref={formContainerRef}>
-            <Form.LabelForm htmlFor="username">Username</Form.LabelForm>
-            <Form.InputForm {...register("username")} />
+            <Form.LabelForm htmlFor="email">Username</Form.LabelForm>
+            <Form.InputForm {...register("email")} />
           </Form.Field>
 
           <Form.Field>

@@ -1,14 +1,13 @@
 // 'use client'
 import logo from "@/assets/logo.svg";
 import  {FormContainer}  from "@/components/FormContainer";
-import { env } from "@/env";
 import Image from "next/image";
 
 
 
 export default function Home() {
 
-  console.log(env.SERVER_API_URL)
+
   return (
     <main className="bg-login min-h-screen min-w-screen  flex items-center justify-center ">
 

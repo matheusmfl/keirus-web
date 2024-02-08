@@ -1,16 +1,25 @@
+import axios from "axios";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(req: NextRequest){
-  const cookie = req.cookies.get('auth')
+
+export async function middleware(req: NextRequest){
+
+  const cookie = cookies().get('Auth')?.value
+
+
+  console.log(cookie)
+
   if(cookie){
-    console.log('cookie existe')
-   
-    return NextResponse.redirect(new URL('/dashboard', req.url))
+    return NextResponse.redirect(new URL('/dashboard/team-members', req.url))
+  }
+    
+  return NextResponse.next()
+
     
   }
-  console.log(cookie)
-  return NextResponse.next()
-}
+
+
 
 export const config = {
   matcher: '/'

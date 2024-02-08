@@ -21,6 +21,9 @@ const config = {
       backgroundColor: {
         login: '#0B1435'
       },
+      fontFamily: {
+        'montSerrat': 'var(--font-montserrat)'
+      },
 
       colors: {
         border: "hsl(var(--border))",
