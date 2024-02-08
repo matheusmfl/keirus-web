@@ -107,7 +107,7 @@ export function UserTableCrud({ UserList }: Props) {
 
     try {
       await updateUser({userId , ...data})
-      toast('Success!');
+      toast('✅ Success!');
     } catch (error) {
       toast.error('Updated Error')
     }
