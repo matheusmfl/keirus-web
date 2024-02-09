@@ -148,7 +148,7 @@ export function UserTableCrud({ UserList }: Props) {
             <TableHead className="w-[100px] border-none">Name</TableHead>
             <TableHead className="w-[100px]">Email</TableHead>
             <TableHead className="w-[100px]">Created At</TableHead>
-            <TableHead className="w-[100px]">Updated At</TableHead>
+            <TableHead className="w-[100px]">Last Access</TableHead>
             <TableHead className="w-[100px]" />
           </TableRow>
         </TableHeader>
