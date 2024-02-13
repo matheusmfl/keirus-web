@@ -1,13 +1,7 @@
 import type { Metadata } from 'next'
-import { Montserrat } from 'next/font/google'
 import '@/app/globals.css'
 import { AsideNavMenu } from './components/AsideNavMenu'
 import { Footer } from './components/Footer'
-
-const montSerrat = Montserrat({
-  subsets: ['latin'],
-  variable: '--font-montserrat',
-})
 
 export const metadata: Metadata = {
   title: 'Keirus Dashboard',
@@ -20,14 +14,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <div>
       <AsideNavMenu />
-      <body className={`${montSerrat.className} bg-[#F6F6F9]`}>
-        <main className="ml-[218px] bg-[#F6F6F9] ">
-          {children}
-          <Footer />
-        </main>
-      </body>
-    </html>
+      <main className="ml-[218px] bg-[#F6F6F9]">
+        {children}
+        <Footer />
+      </main>
+    </div>
   )
 }
