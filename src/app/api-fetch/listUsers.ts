@@ -1,12 +1,18 @@
-import { parseCookies } from 'nookies'
+'use server'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 export async function listUsers() {
-  const cookies = parseCookies()
+  const token = cookies().get('Auth')?.value
+
+  if (!token) {
+    redirect('/')
+  }
   const response = await fetch(`http://localhost:3000/users`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${cookies.Auth}`,
+      Authorization: `Bearer ${token}`,
     },
   })
 
