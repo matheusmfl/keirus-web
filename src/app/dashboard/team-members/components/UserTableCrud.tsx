@@ -1,20 +1,21 @@
-"use client"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+'use client'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import toast, { Toaster } from 'react-hot-toast';
+} from '@/components/ui/dropdown-menu'
+import toast, { Toaster } from 'react-hot-toast'
 
 import dayjs from 'dayjs'
 
@@ -27,72 +28,71 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { DialogClose } from "@radix-ui/react-dialog";
-import { ChevronDown } from "lucide-react";
-import { useRef, useState } from "react";
-import { ButtonLoading } from "./ButtonLoading";
-import { deleteUser } from "@/app/api-fetch/deleteUser";
-import { z } from "zod";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@/components/form";
-import { updateUser } from "@/app/api-fetch/updateUser";
+} from '@/components/ui/table'
+import { DialogClose } from '@radix-ui/react-dialog'
+import { ChevronDown } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { ButtonLoading } from './ButtonLoading'
+import { deleteUser } from '@/app/api-fetch/deleteUser'
+import { z } from 'zod'
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form } from '@/components/form'
+import { updateUser } from '@/app/api-fetch/updateUser'
 
 export interface Users {
   props: {
-    id: string;
-    name: string;
-    email: string;
-    created_at: string;
-    last_access: string;
-  };
+    id: string
+    name: string
+    email: string
+    created_at: string
+    last_access: string
+  }
 }
 
 interface Props {
-  UserList: Users[];
+  UserList: Users[]
 }
 
 const UpdateMemberSchema = z.object({
   name: z.string().optional(),
   email: z.string().optional(),
-});
+})
 
-type UserUpdateData = z.infer<typeof UpdateMemberSchema>;
+type UserUpdateData = z.infer<typeof UpdateMemberSchema>
 
 interface FormData {
-  name?: string;
-  email?: string;
+  name?: string
+  email?: string
 }
 
 export function UserTableCrud({ UserList }: Props) {
-  const [selectedUser, setSelectedUser] = useState<Users | null>(null);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<Users | null>(null)
+  const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openUpdateModal, setOpenUpdateModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const formContainerRef = useRef(null);
+  const formContainerRef = useRef(null)
   const userLoginForm = useForm<UserUpdateData>({
     resolver: zodResolver(UpdateMemberSchema),
-  });
+  })
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
-    
-  } = userLoginForm;
+  } = userLoginForm
 
   function handleCloseDeleteModal() {
-    setOpenDeleteModal(false);
+    setOpenDeleteModal(false)
     setOpenUpdateModal(false)
-    setSelectedUser(null);
+    setSelectedUser(null)
   }
 
   const handleOpenDeleteModal = (id: string) => {
-    const handleSelectUser = UserList.find((user) => user.props.id === id);
-    setOpenDeleteModal(true);
-    setSelectedUser(handleSelectUser || null);
-  };
+    const handleSelectUser = UserList.find((user) => user.props.id === id)
+    setOpenDeleteModal(true)
+    setSelectedUser(handleSelectUser || null)
+  }
 
   const handleOpenUpdateModal = (id: string) => {
     const handleSelectUser = UserList.find((user) => user.props.id === id)
@@ -106,13 +106,12 @@ export function UserTableCrud({ UserList }: Props) {
     const userId = selectedUser?.props.id as string
 
     try {
-      await updateUser({userId , ...data})
-      toast('✅ Success!');
+      await updateUser({ userId, ...data })
+      toast('✅ Success!')
     } catch (error) {
       toast.error('Updated Error')
-    }
-    finally{
-      setIsLoading(false);
+    } finally {
+      setIsLoading(false)
       setSelectedUser(null)
     }
   }
@@ -122,25 +121,21 @@ export function UserTableCrud({ UserList }: Props) {
     setOpenDeleteModal(false)
 
     try {
-      await deleteUser(selectedUser?.props.id as string);
-      toast('Success!');
+      await deleteUser(selectedUser?.props.id as string)
+      toast('Success!')
     } catch (error) {
       toast.error('Error deleting User')
-    }
-    finally{
-      setIsLoading(false);
+    } finally {
+      setIsLoading(false)
       setSelectedUser(null)
     }
-  };
+  }
   return (
     <>
-    <div>
-    <Toaster
-  position="top-right"
-  reverseOrder={true}
-/>
-    </div>
-     
+      <div>
+        <Toaster position="top-right" reverseOrder={true} />
+      </div>
+
       <Table className="bg-white rounded-md px-5">
         <TableCaption>Keirus</TableCaption>
         <TableHeader>
@@ -162,7 +157,7 @@ export function UserTableCrud({ UserList }: Props) {
                 <Avatar>
                   <AvatarImage src="https://github.com/shadcn.png" />
                   <AvatarFallback>CN</AvatarFallback>
-                </Avatar>{" "}
+                </Avatar>{' '}
                 {specification.props.name}
               </TableCell>
               <TableCell className=" space-y-3">
@@ -172,7 +167,7 @@ export function UserTableCrud({ UserList }: Props) {
                 {dayjs(specification.props.created_at).format('MM/DD/YYYY')}
               </TableCell>
               <TableCell className=" space-y-3">
-              {dayjs(specification.props.last_access).format('MM/DD/YYYY')}
+                {dayjs(specification.props.last_access).format('MM/DD/YYYY')}
               </TableCell>
               <TableCell className=" space-y-3">
                 <DropdownMenu>
@@ -182,7 +177,14 @@ export function UserTableCrud({ UserList }: Props) {
                     Options <ChevronDown />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="bg-black text-white">
-                    <DropdownMenuItem onClick={() => handleOpenUpdateModal(specification.props.id)} textValue="edit">Edit</DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        handleOpenUpdateModal(specification.props.id)
+                      }
+                      textValue="edit"
+                    >
+                      Edit
+                    </DropdownMenuItem>
                     <DropdownMenuItem textValue="resetPassword">
                       Reset password
                     </DropdownMenuItem>
@@ -212,15 +214,16 @@ export function UserTableCrud({ UserList }: Props) {
               Reversing this action is not possible.
             </DialogDescription>
 
-            {
-            isLoading ? <ButtonLoading /> :  <Button
-              onClick={handleDeleteUser}
-              className="py-[22px] text-[16px] bg-black "
-            >
-              Yes, Please delete member
-            </Button>
-            }
-         
+            {isLoading ? (
+              <ButtonLoading />
+            ) : (
+              <Button
+                onClick={handleDeleteUser}
+                className="py-[22px] text-[16px] bg-black "
+              >
+                Yes, Please delete member
+              </Button>
+            )}
 
             <DialogClose asChild>
               <Button
@@ -241,43 +244,40 @@ export function UserTableCrud({ UserList }: Props) {
               Update profile
             </DialogTitle>
             <DialogDescription className="font-normal text-[18px] text-[#838383]">
-             Change the profile data
+              Change the profile data
             </DialogDescription>
 
             <FormProvider {...userLoginForm}>
-        <form
-          onSubmit={handleSubmit(handleUpdateUserProfile)}
-          className="flex flex-col gap-6"
-        >
-          <Form.Field ref={formContainerRef}>
-            <Form.LabelForm htmlFor="firstName">Name</Form.LabelForm>
-            <Form.InputForm className="h-[56px]" {...register("name")} />
-          </Form.Field>
+              <form
+                onSubmit={handleSubmit(handleUpdateUserProfile)}
+                className="flex flex-col gap-6"
+              >
+                <Form.Field ref={formContainerRef}>
+                  <Form.LabelForm htmlFor="firstName">Name</Form.LabelForm>
+                  <Form.InputForm className="h-[56px]" {...register('name')} />
+                </Form.Field>
 
-          <Form.Field>
-            <Form.LabelForm
-              className="text-lg text-black font-medium "
-              htmlFor="lastName"
-            >
-              Email
-            </Form.LabelForm>
-            <Form.InputForm {...register("email")} className="h-[56px]" />
-          </Form.Field>
-          {
-            isLoading ? <ButtonLoading /> :  <Button
-              type="submit"
-              className="py-[22px] text-[16px] bg-black "
-            >
-              Confirm changes
-            </Button>
-            }
-          
-
-        </form>
-      </FormProvider>
-
-
-         
+                <Form.Field>
+                  <Form.LabelForm
+                    className="text-lg text-black font-medium "
+                    htmlFor="lastName"
+                  >
+                    Email
+                  </Form.LabelForm>
+                  <Form.InputForm {...register('email')} className="h-[56px]" />
+                </Form.Field>
+                {isLoading ? (
+                  <ButtonLoading />
+                ) : (
+                  <Button
+                    type="submit"
+                    className="py-[22px] text-[16px] bg-black "
+                  >
+                    Confirm changes
+                  </Button>
+                )}
+              </form>
+            </FormProvider>
 
             <DialogClose asChild>
               <Button
@@ -290,8 +290,6 @@ export function UserTableCrud({ UserList }: Props) {
           </DialogHeader>
         </DialogContent>
       </Dialog>
-
-
     </>
-  );
+  )
 }

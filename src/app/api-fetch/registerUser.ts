@@ -1,4 +1,4 @@
-import { parseCookies } from "nookies";
+import { parseCookies } from 'nookies'
 
 interface IUserRegisterData {
   firstName: string
@@ -6,32 +6,28 @@ interface IUserRegisterData {
   email: string
 }
 
-export async function registerUser({firstName, lastName, email}: IUserRegisterData) {
-
+export async function registerUser({
+  firstName,
+  lastName,
+  email,
+}: IUserRegisterData) {
   const data = {
     name: firstName + ' ' + lastName,
     email,
     password: 'KeirusUser1@',
-    role: 'USER'
+    role: 'USER',
   }
-  try {
-    const cookies = parseCookies();
-    const response = await fetch(`http://localhost:3000/users`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.Auth}` 
-      },
-      body: JSON.stringify(data)
-    });
 
-    if (!response.ok) {
-      throw new Error('Unauthenticated');
-    }
+  const cookies = parseCookies()
+  const response = await fetch(`http://localhost:3000/users`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${cookies.Auth}`,
+    },
+    body: JSON.stringify(data),
+  })
 
-    const responseData = await response.json();
-    return responseData;
-  } catch (error) {
-    throw error;
-  }
+  const responseData = await response.json()
+  return responseData
 }
