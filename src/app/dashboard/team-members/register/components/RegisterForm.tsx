@@ -6,7 +6,7 @@ import { useRef } from 'react'
 import { Form } from '@/components/form'
 import { Button } from '@/components/ui/button'
 import { registerUser } from '@/app/api-fetch/registerUser'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { ButtonLoading } from './ButtonLoadin'
 
@@ -49,7 +49,6 @@ export function RegisterForm() {
 
   return (
     <div className=" w-[720px] rounded-md shadow-md bg-white pt-[58px] pb-[40px] px-[70px] flex flex-col">
-      <Toaster position="top-right" reverseOrder={true} />
       <FormProvider {...userLoginForm}>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
           <Form.Field ref={formContainerRef}>

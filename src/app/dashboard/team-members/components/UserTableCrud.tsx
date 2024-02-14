@@ -132,10 +132,6 @@ export function UserTableCrud({ UserList }: Props) {
   }
   return (
     <>
-      <div>
-        <Toaster position="top-right" reverseOrder={true} />
-      </div>
-
       <Table className="bg-white rounded-md px-5">
         <TableCaption>Keirus</TableCaption>
         <TableHeader>
