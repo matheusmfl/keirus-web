@@ -7,7 +7,7 @@ export default function Home() {
     <main className="bg-login min-h-screen min-w-screen  flex items-center justify-center ">
       <div className="flex flex-col gap-14">
         <div className="w-full flex items-center justify-center">
-          <Image src={logo} alt="Keirus logo " />
+          <Image src={logo} priority alt="Keirus logo " />
         </div>
 
         <div className="rounded-[10px] w-[664px]  bg-white px-[72px]  pt-[81px] pb-[78px]">
