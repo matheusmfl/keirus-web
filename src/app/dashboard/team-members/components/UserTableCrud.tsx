@@ -33,12 +33,12 @@ import { DialogClose } from '@radix-ui/react-dialog'
 import { ChevronDown } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { ButtonLoading } from './ButtonLoading'
-import { deleteUser } from '@/app/api-fetch/deleteUser'
 import { z } from 'zod'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Form } from '@/components/form'
 import { updateUser } from '@/app/api-fetch/updateUser'
+import { DeleteModal } from './DeleteModal'
 
 export interface Users {
   props: {
@@ -68,9 +68,7 @@ interface FormData {
 
 export function UserTableCrud({ UserList }: Props) {
   const [selectedUser, setSelectedUser] = useState<Users | null>(null)
-  const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openUpdateModal, setOpenUpdateModal] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
 
   const formContainerRef = useRef(null)
   const userLoginForm = useForm<UserUpdateData>({
@@ -82,17 +80,6 @@ export function UserTableCrud({ UserList }: Props) {
     formState: { isSubmitting },
   } = userLoginForm
 
-  function handleCloseDeleteModal() {
-    setOpenDeleteModal(false)
-    setOpenUpdateModal(false)
-    setSelectedUser(null)
-  }
-
-  const handleOpenDeleteModal = (id: string) => {
-    const handleSelectUser = UserList.find((user) => user.props.id === id)
-    setOpenDeleteModal(true)
-    setSelectedUser(handleSelectUser || null)
-  }
 
   const handleOpenUpdateModal = (id: string) => {
     const handleSelectUser = UserList.find((user) => user.props.id === id)
@@ -116,20 +103,6 @@ export function UserTableCrud({ UserList }: Props) {
     }
   }
 
-  const handleDeleteUser = async () => {
-    setIsLoading(true)
-    setOpenDeleteModal(false)
-
-    try {
-      await deleteUser(selectedUser?.props.id as string)
-      toast('Success!')
-    } catch (error) {
-      toast.error('Error deleting User')
-    } finally {
-      setIsLoading(false)
-      setSelectedUser(null)
-    }
-  }
   return (
     <>
       <Table className="bg-white rounded-md px-5">
@@ -184,13 +157,9 @@ export function UserTableCrud({ UserList }: Props) {
                     <DropdownMenuItem textValue="resetPassword">
                       Reset password
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() =>
-                        handleOpenDeleteModal(specification.props.id)
-                      }
-                    >
-                      Delete
-                    </DropdownMenuItem>
+                    <DeleteModal userId={specification.props.id}>
+                      <DropdownMenuItem>Delete</DropdownMenuItem>
+                    </DeleteModal>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
@@ -200,38 +169,6 @@ export function UserTableCrud({ UserList }: Props) {
         <TableFooter></TableFooter>
       </Table>
 
-      <Dialog open={openDeleteModal}>
-        <DialogContent className="w-[473px] py-[52px] px-[46px]">
-          <DialogHeader className="flex flex-col gap-[21px]">
-            <DialogTitle className="font-medium text-[26px] text-black">
-              Are you sure?
-            </DialogTitle>
-            <DialogDescription className="font-normal text-[23px] text-[#838383]">
-              Reversing this action is not possible.
-            </DialogDescription>
-
-            {isLoading ? (
-              <ButtonLoading />
-            ) : (
-              <Button
-                onClick={handleDeleteUser}
-                className="py-[22px] text-[16px] bg-black "
-              >
-                Yes, Please delete member
-              </Button>
-            )}
-
-            <DialogClose asChild>
-              <Button
-                className="py-[22px] text-[16px] text-[#424242] bg-[#EEEEEE] "
-                onClick={handleCloseDeleteModal}
-              >
-                Cancel
-              </Button>
-            </DialogClose>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
 
       <Dialog open={openUpdateModal}>
         <DialogContent className="w-[473px] py-[52px] px-[46px]">
