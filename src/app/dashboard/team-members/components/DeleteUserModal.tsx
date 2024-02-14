@@ -20,6 +20,7 @@ interface IDeleteModalProps {
 }
 
 export function DeleteUserModal({ userId, children }: IDeleteModalProps) {
+  const [isLoading, setIsLoading] = useState(false)
   const handleDeleteUser = async () => {
     setIsLoading(true)
 
@@ -32,7 +33,7 @@ export function DeleteUserModal({ userId, children }: IDeleteModalProps) {
       setIsLoading(false)
     }
   }
-  const [isLoading, setIsLoading] = useState(false)
+
   return (
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
