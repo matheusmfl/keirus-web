@@ -14,12 +14,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <div>
+    <section>
       <AsideNavMenu />
       <main className="ml-[218px] bg-[#F6F6F9]">
         {children}
         <Footer />
       </main>
-    </div>
+    </section>
   )
 }
