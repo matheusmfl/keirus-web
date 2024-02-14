@@ -38,7 +38,7 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Form } from '@/components/form'
 import { updateUser } from '@/app/api-fetch/updateUser'
-import { DeleteModal } from './DeleteModal'
+import { DeleteUserModal } from './DeleteUserModal'
 
 export interface Users {
   props: {
@@ -79,7 +79,6 @@ export function UserTableCrud({ UserList }: Props) {
     handleSubmit,
     formState: { isSubmitting },
   } = userLoginForm
-
 
   const handleOpenUpdateModal = (id: string) => {
     const handleSelectUser = UserList.find((user) => user.props.id === id)
@@ -157,9 +156,9 @@ export function UserTableCrud({ UserList }: Props) {
                     <DropdownMenuItem textValue="resetPassword">
                       Reset password
                     </DropdownMenuItem>
-                    <DeleteModal userId={specification.props.id}>
+                    <DeleteUserModal userId={specification.props.id}>
                       <DropdownMenuItem>Delete</DropdownMenuItem>
-                    </DeleteModal>
+                    </DeleteUserModal>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
@@ -168,7 +167,6 @@ export function UserTableCrud({ UserList }: Props) {
         </TableBody>
         <TableFooter></TableFooter>
       </Table>
-
 
       <Dialog open={openUpdateModal}>
         <DialogContent className="w-[473px] py-[52px] px-[46px]">
