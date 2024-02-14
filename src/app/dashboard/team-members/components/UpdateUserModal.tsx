@@ -63,7 +63,7 @@ export function UpdateUserModal({
   }
   return (
     <Dialog {...props}>
-      <DialogTrigger>{children}</DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         className="w-[473px] py-[52px] px-[46px]"
         // onEscapeKeyDown={}

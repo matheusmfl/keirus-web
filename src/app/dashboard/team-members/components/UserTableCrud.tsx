@@ -24,7 +24,7 @@ import { ChevronDown } from 'lucide-react'
 
 import { DeleteUserModal } from './DeleteUserModal'
 import { UpdateUserModal } from './UpdateUserModal'
-// import { useState } from 'react'
+import { useState } from 'react'
 
 export interface Users {
   props: {
@@ -41,6 +41,15 @@ interface Props {
 }
 
 export function UserTableCrud({ UserList }: Props) {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<Users | null>(null)
+
+  const handleOpenDeleteModal = (id: string) => {
+    const handleSelectUser = UserList.find((user) => user.props.id === id)
+    setIsDeleteModalOpen(true)
+    setSelectedUser(handleSelectUser || null)
+  }
+
   return (
     <>
       <Table className="bg-white rounded-md px-5">
@@ -80,9 +89,6 @@ export function UserTableCrud({ UserList }: Props) {
                 <DropdownMenu>
                   <DropdownMenuTrigger
                     className={`flex group bg-[#F5F4F7] data-[state=open]:text-white data-[state=open]:bg-black text-black  px-2 py-1 rounded-md font-normal items-center gap-1`}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                    }}
                   >
                     Options <ChevronDown />
                   </DropdownMenuTrigger>
@@ -97,10 +103,12 @@ export function UserTableCrud({ UserList }: Props) {
                       Reset password
                     </DropdownMenuItem>
 
-                    <DropdownMenuItem textValue="delete">
-                      <DeleteUserModal userId={specification.props.id}>
-                        Delete
-                      </DeleteUserModal>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        handleOpenDeleteModal(specification.props.id)
+                      }
+                    >
+                      Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -110,6 +118,11 @@ export function UserTableCrud({ UserList }: Props) {
         </TableBody>
         <TableFooter></TableFooter>
       </Table>
+      <DeleteUserModal
+        userId={selectedUser?.props.id as string}
+        isDeleteModalOpen={isDeleteModalOpen}
+        setIsDeleteModalOpen={setIsDeleteModalOpen}
+      />
     </>
   )
 }

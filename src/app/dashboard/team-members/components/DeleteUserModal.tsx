@@ -7,19 +7,23 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
-import { ReactNode, useState } from 'react'
+import { useState } from 'react'
 import { ButtonLoading } from './ButtonLoading'
 import { deleteUser } from '@/app/api-fetch/deleteUser'
 import toast from 'react-hot-toast'
 
 interface IDeleteModalProps {
   userId: string
-  children: ReactNode
+  isDeleteModalOpen: boolean
+  setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function DeleteUserModal({ userId, children }: IDeleteModalProps) {
+export function DeleteUserModal({
+  userId,
+  isDeleteModalOpen,
+  setIsDeleteModalOpen,
+}: IDeleteModalProps) {
   const [isLoading, setIsLoading] = useState(false)
   const handleDeleteUser = async () => {
     setIsLoading(true)
@@ -31,13 +35,17 @@ export function DeleteUserModal({ userId, children }: IDeleteModalProps) {
       toast.error('Error deleting User')
     } finally {
       setIsLoading(false)
+      setIsDeleteModalOpen(false)
     }
   }
 
   return (
-    <Dialog>
-      <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent className="w-[473px] py-[52px] px-[46px]">
+    <Dialog open={isDeleteModalOpen}>
+      <DialogContent
+        className="w-[473px] py-[52px] px-[46px]"
+        onEscapeKeyDown={() => setIsDeleteModalOpen(false)}
+        onInteractOutside={() => setIsDeleteModalOpen(false)}
+      >
         <DialogHeader className="flex flex-col gap-[21px]">
           <DialogTitle className="font-medium text-[26px] text-black">
             Are you sure?
@@ -58,7 +66,10 @@ export function DeleteUserModal({ userId, children }: IDeleteModalProps) {
           )}
 
           <DialogClose asChild>
-            <Button className="py-[22px] text-[16px] text-[#424242] bg-[#EEEEEE]">
+            <Button
+              className="py-[22px] text-[16px] text-[#424242] bg-[#EEEEEE]"
+              onClick={() => setIsDeleteModalOpen(false)}
+            >
               Cancel
             </Button>
           </DialogClose>
