@@ -6,7 +6,7 @@ interface InputFormProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string
 }
 
-const InputForm = forwardRef<HTMLInputElement, InputFormProps>((props) => {
+const InputForm = forwardRef<HTMLInputElement, InputFormProps>((props, ref) => {
   const { register } = useFormContext()
 
   return (
@@ -15,6 +15,7 @@ const InputForm = forwardRef<HTMLInputElement, InputFormProps>((props) => {
       className="border border-[#D9D9D9] rounded-[5px] h-20 text-lg text-[#393939]"
       {...register(props.name)}
       {...props}
+      ref={ref}
     />
   )
 })
